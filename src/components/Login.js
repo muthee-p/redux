@@ -1,30 +1,38 @@
 import React, { useState } from 'react';
 import {auth} from '../config/Firebase'
-import { createUserWithEmailAndPassword } from 'firebase/auth';
-import Nav from './Nav';
-import { useNavigate } from 'react-router-dom';
+// import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { userSignIn } from '../actions/LoginActions';
+import { Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
 
-const Login = () => {
+const Login = ({isAuthenticated, userSignIn}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const history = useNavigate();
+  // const history = useNavigate();
 
+const submitLogin = e =>{
+  e.preventDefault();
+};
 
-  const submitLogin = async() => {
-    try{
-    await createUserWithEmailAndPassword(auth, email,password);
-    history('/home');
-  }catch (err){
-    console.error(err)
-  }
-  };
+if(isAuthenticated){
+  return <Redirect to="/home" />;
+};
+  // const submitLogin = async(e) => {
+  //   e.preventDefault();
+  //   try{
+  //   await createUserWithEmailAndPassword(auth, email,password);
+  //   history('/home');
+  // }catch (err){
+  //   console.error(err)
+  // }
+  // };
   return (
     <div className='mt-36'>
         
         <h4>Login</h4>
-        <form>
-            <input onChange={(e) => setEmail(e.target.value)} type='text' placeholder='username' />
-            <input onChange={(e) => setPassword(e.target.value)} type ='password' placeholder='password' />
+        <form onSubmit={userSignIn}>
+            <input onChange={(e) => setEmail(e.target.value)} value={email} type='text' placeholder='username' />
+            <input onChange={(e) => setPassword(e.target.value)} value ={ password} type ='password' placeholder='password' />
             <button onClick={submitLogin}>
               Login
             </button>
@@ -33,4 +41,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default connect(mapStateToProps, {userSignIn}) (Login);
