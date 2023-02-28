@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import {auth} from '../config/Firebase'
 // import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { userSignIn } from '../actions/LoginActions';
-import { Redirect } from 'react-router-dom';
+import { Navigation } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 const Login = ({isAuthenticated, userSignIn}) => {
@@ -15,7 +15,7 @@ const submitLogin = e =>{
 };
 
 if(isAuthenticated){
-  return <Redirect to="/home" />;
+  return <Navigation to="/home" />;
 };
   // const submitLogin = async(e) => {
   //   e.preventDefault();
@@ -40,5 +40,8 @@ if(isAuthenticated){
     </div>
   )
 }
+const mapStateToProps = state => ({
+  isAuthenticated: state.auth.isAuthenticated
+});
 
 export default connect(mapStateToProps, {userSignIn}) (Login);
